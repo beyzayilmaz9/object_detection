@@ -1,12 +1,19 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture("dummy1.webm") 
+try:
+    cap= cv2.VideoCapture("dummy.mp4")
+    if(cap.isOpened()==False):
+        print("Error opening video stream or file")
+except Exception as e:
+    print(e)
+    exit()
 
-while True:
+while (cap.isOpened()):
     ret, frame = cap.read()
     if not ret:
         break  
+    cv2.imshow("Frame", frame)
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     lower_yellow = np.array([20, 100, 100])
@@ -34,8 +41,6 @@ while True:
         cv2.putText(frame, f"Mesafe: {distance}px", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         print(distance)
 
-    cv2.imshow("Mask", mask)
-    cv2.imshow("Detected", frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
